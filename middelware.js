@@ -13,18 +13,18 @@ exports.authorized = (req, res, next) => {
 
   if (token) {
     jwt.verify(token, "thisismysecretkey", (err, decoded) => {
+      console.log(decoded.id, req.user_id);
       if (err) {
         return res.status(403).json({
           msg: "Token is not valid"
         });
       }
 
-      if (req.params.author_id != decoded.id) {
+      if (decoded.id != req.user_id) {
         return res.status(401).json({
           msg: "You are not authorized"
         });
       }
-
       next();
     });
   }
@@ -44,7 +44,7 @@ exports.authenticated = (req, res, next) => {
             message: "token is not valid"
           });
         } else {
-          req.decode = decode;
+          req.user_id = decode.id;
           next();
         }
       });

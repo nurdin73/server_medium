@@ -10,6 +10,8 @@ app.use(express.json());
 const { authorized, authenticated, validate } = require("./middelware");
 
 const categoryControllers = require("./controllers/categories");
+const articleControllers = require("./controllers/articles");
+const userControllers = require("./controllers/user");
 const authControllers = require("./controllers/auth");
 
 app.get("/", (req, res) => {
@@ -17,8 +19,27 @@ app.get("/", (req, res) => {
 });
 
 app.group("/api/v1", router => {
+  // categories
   router.get("/categories", categoryControllers.index);
-  router.get("/category", categoryControllers.category);
+  router.get("/category/:id", categoryControllers.category);
+  router.get("/category/:name/articles", categoryControllers.detail);
+  router.post("/category", authenticated, categoryControllers.addCategory);
+  router.patch(
+    "/category/:id",
+    authenticated,
+    categoryControllers.editCategory
+  );
+  router.delete("/category/:id", authenticated, categoryControllers.delete);
+
+  // article
+  router.get("/articles", articleControllers.index);
+  router.get("/article/:title", articleControllers.article);
+  router.post("/article", authenticated, articleControllers.post);
+  router.patch("/article/:id", authenticated, articleControllers.patch);
+  router.delete("/article/:id", authenticated, articleControllers.delete);
+
+  // user
+  router.get("/user/:username/articles", userControllers.articles);
 
   // auth
   router.post("/login", authControllers.index);
