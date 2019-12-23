@@ -12,6 +12,7 @@ const { authorized, authenticated, validate } = require("./middelware");
 const categoryControllers = require("./controllers/categories");
 const articleControllers = require("./controllers/articles");
 const userControllers = require("./controllers/user");
+const commentControllers = require("./controllers/comment");
 const authControllers = require("./controllers/auth");
 
 app.get("/", (req, res) => {
@@ -40,6 +41,20 @@ app.group("/api/v1", router => {
 
   // user
   router.get("/user/:username/articles", userControllers.articles);
+
+  // comment
+  router.get("/article/:title/comments", commentControllers.index);
+  router.post("/comment", authenticated, commentControllers.addComment);
+  router.patch(
+    "/article/:title/comment/:id",
+    authenticated,
+    commentControllers.update
+  );
+  router.delete(
+    "/article/:title/comment/:id",
+    authenticated,
+    commentControllers.delete
+  );
 
   // auth
   router.post("/login", authControllers.index);
