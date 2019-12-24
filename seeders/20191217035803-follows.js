@@ -6,14 +6,14 @@ module.exports = {
       "follows",
       [
         {
-          user_id: 1,
-          follows_user_id: 2,
+          following: 1,
+          followers: 2,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          user_id: 1,
-          follows_user_id: 3,
+          following: 1,
+          followers: 3,
           createdAt: new Date(),
           updatedAt: new Date()
         }

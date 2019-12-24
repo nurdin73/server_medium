@@ -3,16 +3,20 @@ module.exports = (sequelize, DataTypes) => {
   const follows = sequelize.define(
     "follows",
     {
-      user_id: DataTypes.INTEGER,
-      follows_user_id: DataTypes.INTEGER
+      following: DataTypes.INTEGER,
+      followers: DataTypes.INTEGER
     },
     {}
   );
   follows.associate = function(models) {
     // associations can be defined here
-    follows.hasMany(models.users, {
-      foreignKey: "user_id",
-      as: "following"
+    follows.belongsTo(models.users, {
+      foreignKey: "following",
+      sourceKey: "id"
+    });
+    follows.belongsTo(models.users, {
+      foreignKey: "followers",
+      sourceKey: "id"
     });
   };
   return follows;

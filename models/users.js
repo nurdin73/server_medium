@@ -17,19 +17,24 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "author_id"
     });
 
+    // users.hasMany(models.follows, {
+    //   as: "followers",
+    //   foreignKey: "followers"
+    // });
+
     users.belongsToMany(models.users, {
-      foreignKey: "user_id",
-      through: models.follows,
+      through: "follows",
+      foreignKey: "following",
       as: "following",
       sourceKey: "id"
     });
 
-    // users.belongsToMany(models.users, {
-    //   foreignKey: "follows_user_id",
-    //   through: "follows",
-    //   as: "followed",
-    //   sourceKey: "id"
-    // });
+    users.belongsToMany(models.users, {
+      through: "follows",
+      foreignKey: "followers",
+      as: "followed",
+      sourceKey: "id"
+    });
   };
   return users;
 };

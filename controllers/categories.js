@@ -1,20 +1,7 @@
 const Categories = require("../models").categories;
 const Users = require("../models").users;
 const Articles = require("../models").articles;
-
-const slug = text => {
-  let text1 = text.split("-");
-  for (let i = 0; i <= text1.length; i++) {
-    return text1
-      .toString()
-      .toLowerCase()
-      .replace("-", " ")
-      .replace(/[^\w\-]+/g, " ")
-      .replace(/\-\-+/g, "-")
-      .replace(/^-+/, "")
-      .replace(/-+$/, "");
-  }
-};
+const slugify = require("slugify");
 
 const details = data => {
   const newArticles = data.map(item => {
@@ -23,7 +10,7 @@ const details = data => {
       title: item.title,
       content: item.content,
       image: item.image,
-      category: slug(item.category.name),
+      category: slugify(item.category.name, " "),
       user: item.user.fullname
     };
     return newItems;
@@ -78,7 +65,7 @@ exports.detail = (req, res) => {
         model: Categories,
         as: "category",
         where: {
-          name: slug(req.params.name)
+          name: slugify(req.params.name, " ")
         }
       },
       {

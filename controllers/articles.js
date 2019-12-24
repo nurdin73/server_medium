@@ -1,31 +1,8 @@
 const Articles = require("../models/").articles;
 const Users = require("../models/").users;
 const Categories = require("../models/").categories;
-
-const slug = text => {
-  return text
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
-};
-
-const slugPrev = text => {
-  let text1 = text.split("-");
-  for (let i = 0; i <= text1.length; i++) {
-    return text1
-      .toString()
-      .toLowerCase()
-      .replace("-", " ")
-      .replace(/[^\w\-]+/g, " ")
-      .replace(/\-\-+/g, "-")
-      .replace(/^-+/, "")
-      .replace(/-+$/, "");
-  }
-};
+const Sequelize = require("sequelize");
+const slugify = require("slugify");
 
 const articles = data => {
   const newArticle = data.map(item => {
@@ -43,7 +20,7 @@ const articles = data => {
         username: item.user.username
       },
       dateCreated: item.createdAt,
-      slug: slug(item.title)
+      slug: slugify(item.title)
     };
     return newItem;
   });
@@ -65,7 +42,7 @@ const detailArticle = data => {
       username: data.user.username
     },
     dateCreated: data.createdAt,
-    slug: slug(data.title)
+    slug: slugify(data.title)
   };
   return newItem;
 };
@@ -97,11 +74,107 @@ exports.index = (req, res) => {
   });
 };
 
-exports.article = (req, res) => {
-  console.log(slugPrev(req.params.title));
+exports.popular = (req, res) => {
+  Articles.findAll({
+    limit: parseInt(req.query.q),
+    order: [["id", "DESC"]],
+    where: {
+      is_published: true,
+      is_archived: false
+    },
+    include: [
+      {
+        model: Categories,
+        as: "category"
+      },
+      {
+        model: Users,
+        as: "user"
+      }
+    ]
+  }).then(data => {
+    if (data === null) {
+      res.status(404).json({
+        message: "data article not found"
+      });
+    } else {
+      res.status(200).json(articles(data));
+    }
+  });
+};
+
+exports.relatedArticle = (req, res) => {
+  let listArticle = [];
+  let allRelated = [];
   Articles.findOne({
     where: {
-      title: slugPrev(req.params.title),
+      title: slugify(req.params.title, " "),
+      is_published: true,
+      is_archived: false
+    },
+    include: [
+      {
+        model: Categories,
+        as: "category"
+      },
+      {
+        model: Users,
+        as: "user"
+      }
+    ]
+  }).then(article => {
+    Articles.findAll({
+      where: {
+        category_id: article.category_id,
+        is_published: true,
+        is_archived: false
+      },
+      include: [
+        {
+          model: Categories,
+          as: "category"
+        },
+        {
+          model: Users,
+          as: "user"
+        }
+      ]
+    }).then(related => {
+      related.map(data => {
+        allRelated.push(data.id);
+      });
+      Articles.findAll({
+        where: {
+          category_id: article.category_id,
+          is_published: true,
+          is_archived: false
+        },
+        include: [
+          {
+            model: Categories,
+            as: "category"
+          },
+          {
+            model: Users,
+            as: "user"
+          }
+        ],
+        limit: 3,
+        order: [Sequelize.fn("RAND")]
+      }).then(related1 => {
+        related1.map(data => {
+          listArticle.push(data.id);
+        });
+        res.status(200).json(articles(related1));
+      });
+    });
+  });
+};
+
+exports.article = (req, res) => {
+  Articles.findOne({
+    where: {
+      title: slugify(req.params.title, " "),
       is_published: true,
       is_archived: false
     },

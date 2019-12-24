@@ -35,7 +35,9 @@ app.group("/api/v1", router => {
 
   // article
   router.get("/articles", articleControllers.index);
+  router.get("/articles/latest", articleControllers.popular);
   router.get("/article/:title", articleControllers.article);
+  router.get("/article/:title/related", articleControllers.relatedArticle);
   router.post("/article", authenticated, articleControllers.post);
   router.patch("/article/:id", authenticated, articleControllers.patch);
   router.delete("/article/:id", authenticated, articleControllers.delete);
@@ -59,6 +61,7 @@ app.group("/api/v1", router => {
 
   // follow
   router.get("/follows", authenticated, followsControllers.index);
+  router.post("/follow", authenticated, followsControllers.post);
 
   // auth
   router.post("/login", authControllers.index);

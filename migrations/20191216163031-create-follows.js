@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
 
-      user_id: {
+      following: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",
@@ -18,7 +18,7 @@ module.exports = {
         onUpdate: "cascade",
         onDelete: "cascade"
       },
-      follows_user_id: {
+      followers: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",
