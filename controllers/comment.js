@@ -61,7 +61,11 @@ exports.addComment = (req, res) => {
       id: req.body.article_id
     }
   }).then(article => {
-    Comments.create(req.body).then(data =>
+    Comments.create({
+      article_id: req.body.article_id,
+      user_id: req.user_id,
+      comment: req.body.comment
+    }).then(data =>
       res.status(200).json({
         id: data.id,
         comment: data.comment,

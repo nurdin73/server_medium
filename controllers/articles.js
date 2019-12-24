@@ -121,7 +121,15 @@ exports.article = (req, res) => {
 exports.post = (req, res) => {
   Articles.findOne().then(article => {
     if (req.body.title != article.title) {
-      Articles.create(req.body).then(data => {
+      Articles.create({
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        category_id: req.body.category_id,
+        author_id: req.user_id,
+        is_published: true,
+        is_archived: false
+      }).then(data => {
         res.status(200).json({
           message: "success add article",
           data: data

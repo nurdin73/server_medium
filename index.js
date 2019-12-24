@@ -13,6 +13,7 @@ const categoryControllers = require("./controllers/categories");
 const articleControllers = require("./controllers/articles");
 const userControllers = require("./controllers/user");
 const commentControllers = require("./controllers/comment");
+const followsControllers = require("./controllers/follows");
 const authControllers = require("./controllers/auth");
 
 app.get("/", (req, res) => {
@@ -55,6 +56,9 @@ app.group("/api/v1", router => {
     authenticated,
     commentControllers.delete
   );
+
+  // follow
+  router.get("/follows", authenticated, followsControllers.index);
 
   // auth
   router.post("/login", authControllers.index);
