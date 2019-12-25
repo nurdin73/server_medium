@@ -15,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "following",
       sourceKey: "following"
     });
-    follows.belongsTo(models.users, {
-      foreignKey: "followers",
-      sourceKey: "followers"
-    });
+    // follows.belongsTo(models.users, {
+    //   foreignKey: "followers",
+    //   sourceKey: "followers"
+    // });
   };
   return follows;
 };
