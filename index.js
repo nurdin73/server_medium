@@ -62,6 +62,7 @@ app.group("/api/v1", router => {
   // follow
   router.get("/follows", authenticated, followsControllers.index);
   router.post("/follow", authenticated, followsControllers.post);
+  router.delete("/follow/:id", authenticated, followsControllers.delete);
 
   // auth
   router.post("/login", authControllers.index);

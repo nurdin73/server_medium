@@ -1,20 +1,21 @@
 const Articles = require("../models/").articles;
 const Users = require("../models/").users;
 const Comments = require("../models/").comments;
+const slugify = require("slugify");
 
-const slugPrev = text => {
-  let text1 = text.split("-");
-  for (let i = 0; i <= text1.length; i++) {
-    return text1
-      .toString()
-      .toLowerCase()
-      .replace("-", " ")
-      .replace(/[^\w\-]+/g, " ")
-      .replace(/\-\-+/g, "-")
-      .replace(/^-+/, "")
-      .replace(/-+$/, "");
-  }
-};
+// const slugPrev = text => {
+//   let text1 = text.split("-");
+//   for (let i = 0; i <= text1.length; i++) {
+//     return text1
+//       .toString()
+//       .toLowerCase()
+//       .replace("-", " ")
+//       .replace(/[^\w\-]+/g, " ")
+//       .replace(/\-\-+/g, "-")
+//       .replace(/^-+/, "")
+//       .replace(/-+$/, "");
+//   }
+// };
 
 const comments = data => {
   const newComment = data.map(item => {
@@ -42,7 +43,7 @@ exports.index = (req, res) => {
         model: Articles,
         as: "article",
         where: {
-          title: slugPrev(req.params.title)
+          title: slugify(req.params.title, " ")
         }
       },
       {
@@ -89,14 +90,21 @@ exports.update = (req, res) => {
         message: "you are forbidden to update this comment"
       });
     } else {
-      Comments.update(req.body, {
-        where: {
-          id: req.params.id
+      Comments.update(
+        {
+          article_id: comment.article_id,
+          user_id: req.user_id,
+          comment: req.body.comment
+        },
+        {
+          where: {
+            id: req.params.id
+          }
         }
-      }).then(data => {
+      ).then(data => {
         Articles.findOne({
           where: {
-            title: slugPrev(req.params.title)
+            title: slugify(req.params.title, " ")
           }
         }).then(article => {
           res.status(200).json({

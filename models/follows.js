@@ -10,13 +10,14 @@ module.exports = (sequelize, DataTypes) => {
   );
   follows.associate = function(models) {
     // associations can be defined here
+
     follows.belongsTo(models.users, {
       foreignKey: "following",
-      sourceKey: "id"
+      sourceKey: "following"
     });
     follows.belongsTo(models.users, {
       foreignKey: "followers",
-      sourceKey: "id"
+      sourceKey: "followers"
     });
   };
   return follows;
