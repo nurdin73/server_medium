@@ -22,6 +22,7 @@ exports.index = (req, res) => {
           "thisismysecretkey"
         );
         res.status(200).json({
+          message: true,
           email: user.email,
           token: token
         });

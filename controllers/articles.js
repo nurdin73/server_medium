@@ -11,6 +11,8 @@ const articles = data => {
       title: item.title,
       content: item.content,
       image: item.image,
+      category_name: item.category.name,
+      fullname: item.user.fullname,
       category: {
         id: item.category.id,
         name: item.category.name
@@ -33,14 +35,10 @@ const detailArticle = data => {
     title: data.title,
     content: data.content,
     image: data.image,
-    category: {
-      id: data.category.id,
-      name: data.category.name
-    },
-    user: {
-      id: data.user.id,
-      username: data.user.username
-    },
+    category_id: data.category.id,
+    category_name: data.category.name,
+    user_id: data.user.id,
+    fullName: data.user.fullname,
     dateCreated: data.createdAt,
     slug: slugify(data.title)
   };
