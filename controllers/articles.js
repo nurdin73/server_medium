@@ -203,12 +203,13 @@ exports.post = (req, res) => {
         is_archived: false
       }).then(data => {
         res.status(200).json({
-          message: "success add article",
+          success: true,
           data: data
         });
       });
     } else {
       return res.status(403).json({
+        success: false,
         message: "title already exist"
       });
     }

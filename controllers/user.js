@@ -89,3 +89,31 @@ exports.profile = (req, res) => {
     });
   });
 };
+
+exports.userArticle = (req, res) => {
+  Articles.findAll({
+    where: {
+      author_id: req.user_id,
+      is_published: req.body.publish,
+      is_archived: req.body.archive
+    },
+    include: [
+      {
+        model: Categories,
+        as: "category"
+      },
+      {
+        model: Users,
+        as: "user"
+      }
+    ]
+  }).then(article => {
+    if (article != null) {
+      res.status(200).json(articles(article));
+    } else {
+      res.status(404).json({
+        message: "You have no article"
+      });
+    }
+  });
+};

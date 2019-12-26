@@ -21,14 +21,9 @@ const comments = data => {
   const newComment = data.map(item => {
     let newItem = {
       id: item.id,
-      article: {
-        id: item.article.id,
-        title: item.article.title
-      },
-      user: {
-        id: item.user.id,
-        name: item.user.username
-      },
+      title: item.article.title,
+      username: item.user.username,
+      fullname: item.user.fullname,
       comment: item.comment
     };
     return newItem;
@@ -38,6 +33,7 @@ const comments = data => {
 
 exports.index = (req, res) => {
   Comments.findAll({
+    order: [["id", "DESC"]],
     include: [
       {
         model: Articles,
