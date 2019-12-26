@@ -12,6 +12,7 @@ const articles = data => {
       image: item.image,
       category: item.category.name,
       user: item.user.fullname,
+      username: item.user.username,
       dateCreated: item.createdAt
     };
     return newItem;
@@ -56,5 +57,35 @@ exports.articles = (req, res) => {
     ]
   }).then(data => {
     res.status(200), res.send(articles(data));
+  });
+};
+
+exports.user = (req, res) => {
+  Users.findOne({
+    where: {
+      username: req.params.username
+    }
+  }).then(data => {
+    res.status(200).json({
+      fullname: data.fullname,
+      username: data.username,
+      email: data.email
+    });
+  });
+};
+
+exports.profile = (req, res) => {
+  Users.findOne({
+    where: {
+      id: req.user_id
+    }
+  }).then(data => {
+    res.status(200).json({
+      id: data.id,
+      username: data.username,
+      fullname: data.fullname,
+      initial: data.fullname[0],
+      email: data.fullname
+    });
   });
 };

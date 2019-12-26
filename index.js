@@ -44,6 +44,8 @@ app.group("/api/v1", router => {
 
   // user
   router.get("/user/:username/articles", userControllers.articles);
+  router.get("/profile", authenticated, userControllers.profile);
+  router.get("/user/:username", userControllers.user);
 
   // comment
   router.get("/article/:title/comments", commentControllers.index);

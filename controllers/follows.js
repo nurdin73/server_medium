@@ -9,13 +9,11 @@ const follows = data => {
 };
 
 exports.index = (req, res) => {
-  Follows.findAll({
+  Users.findAll({
     include: [
       {
-        model: Users
-      },
-      {
-        model: Users
+        model: Users,
+        as: "followers"
       }
     ]
   }).then(data => {

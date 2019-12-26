@@ -39,6 +39,7 @@ const detailArticle = data => {
     category_name: data.category.name,
     user_id: data.user.id,
     fullName: data.user.fullname,
+    username: data.user.username,
     dateCreated: data.createdAt,
     slug: slugify(data.title)
   };
@@ -74,7 +75,7 @@ exports.index = (req, res) => {
 
 exports.popular = (req, res) => {
   Articles.findAll({
-    limit: parseInt(req.query.q),
+    limit: 10,
     order: [["id", "DESC"]],
     where: {
       is_published: true,

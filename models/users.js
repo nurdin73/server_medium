@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     // });
     users.belongsToMany(models.users, {
       through: models.follows,
-      as: "user1",
+      as: "following",
       foreignKey: "following"
     });
     users.belongsToMany(models.users, {
